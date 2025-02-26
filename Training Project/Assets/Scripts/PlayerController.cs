@@ -33,6 +33,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (_input.actions["Pause"].WasPressedThisFrame())
+        {
+        GameManager.Instance.TogglePause();
+        }
+
+
+        if (GameManager.Instance.State != GameState.Playing) return;
+
         //if Fire action was performed log it to the console
         if (_input.actions["Fire"].WasPressedThisFrame())
         {
@@ -44,11 +53,11 @@ public class PlayerController : MonoBehaviour
                                 Quaternion.identity);
             //Get the Rigidbody 2D component from the new ball 
             //and set its velocity to x:-10f, y:0, z:0
-            ball.GetComponent<Rigidbody2D>().velocity = Vector2.left * ballSpeed;
+            //ball.GetComponent<Rigidbody2D>().velocity = Vector2.left * ballSpeed;
             //Debug.Log("Fire activated!");
 
             ball.GetComponent<Rigidbody2D>().velocity = //has top do with movement projectiles
-            _facingVector.normalized * 10f ; //has to do with movement projectiles
+            _facingVector.normalized * ballSpeed ; //has to do with movement projectiles
 
              //*CHANGE* instead of changing rigidbody velocity: 
             //call SetDirection from BallController on new ball
@@ -69,5 +78,9 @@ public class PlayerController : MonoBehaviour
     {
         _facingVector = _rigidbody.velocity; // projectile movement
     }
+
+        //ADD:
+        //only check inputs when playing
+        if (GameManager.Instance.State != GameState.Playing) return;
     }
 }
