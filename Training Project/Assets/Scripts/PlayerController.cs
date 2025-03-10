@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInput _input; //field to reference Player Input component
     private Rigidbody2D _rigidbody;
     private Vector2 _facingVector = Vector2.right; //projectile mnovement
+    private bool _isRecoiling = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
         //Invoke(nameof(AcceptDefeat), 10);
     }
 
-    void AcceptDefeat()
+    public void AcceptDefeat()
     {
         Destroy(gameObject);
     }
@@ -68,6 +69,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        if (_isRecoiling) return;
+
         //set direction to the Move action's Vector2 value
         var dir = _input.actions["Move"].ReadValue<Vector2>();
 
@@ -82,5 +86,17 @@ public class PlayerController : MonoBehaviour
         //ADD:
         //only check inputs when playing
         if (GameManager.Instance.State != GameState.Playing) return;
+    }
+
+    public void Recoil(Vector2 directionVector)
+    {
+        _rigidbody.AddForce(directionVector, ForceMode2D.Impulse);
+        _isRecoiling = true;
+        Invoke(nameof(StopRecoiling), .3f);
+    }
+
+    private void StopRecoiling()
+    {
+        _isRecoiling = false;
     }
 }
