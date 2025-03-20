@@ -6,6 +6,8 @@ using UnityEngine;
 public class VictoryController : MonoBehaviour
 {
     private ParticleSystem _particles;
+
+    [SerializeField] GameObject exit;
     // Start is called before the first frame update
 
     void Awake()
@@ -25,5 +27,7 @@ public class VictoryController : MonoBehaviour
     private void Celebrate()
     {
         _particles.Play();
+
+        exit.SetActive(true);
     }
 }
